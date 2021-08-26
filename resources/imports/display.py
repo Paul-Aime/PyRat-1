@@ -250,7 +250,7 @@ def run(maze, width, height, q, q_render_in, q_quit, p1name, p2name, q1_out, q2_
                     else:
                         if event.type == pygame.VIDEORESIZE:
                             window_width, window_height = event.w, event.h
-                            screen = pygame.display.set_mode((window_width, window_height),pygame.RESIZABLE)
+                            #screen = pygame.display.set_mode((window_width, window_height),pygame.RESIZABLE)
                             scale, offset_x, offset_y, image_background, image_cheese, image_corner, image_moving_python, image_moving_rat, image_python, image_rat, image_wall, image_mud, image_portrait_python, image_portrait_rat, tiles, image_tile = init_coords_and_images(width, height, player1_is_alive, player2_is_alive, window_width, window_height)
                             maze_image = build_background(screen, maze, tiles, image_background, image_tile, image_wall, image_corner, image_mud, offset_x, offset_y, width, height, window_width, window_height, image_portrait_rat, image_portrait_python, scale, player1_is_alive, player2_is_alive)
 
