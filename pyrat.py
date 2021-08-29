@@ -587,7 +587,8 @@ def main():
             pygame.display.set_icon(image_icon)
             pygame.display.set_caption("PyRat")
             if args.fullscreen:
-                screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
+                #screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
+                screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.NOFRAME|pygame.FULLSCREEN)
                 args.window_width = infoObject.current_w
                 args.window_height = infoObject.current_h
             else:
