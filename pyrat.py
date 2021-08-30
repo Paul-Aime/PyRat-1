@@ -566,8 +566,11 @@ def run_game(screen, infoObject):
     if not(args.nodrawing):
         if args.auto_exit:
             q_render_quit.put("")
-        if draw.is_alive():
-            q_render_in.get()
+        #if draw.is_alive():
+        #    q_render_in.get()
+        while draw.is_alive() and q_render_in.empty():
+            pygame.event.pump()
+            time.sleep(0.1)
     # Send stats about the game
     stats = {"win_rat": win1, "win_python": win2, "score_rat": score1, "score_python": score2, "moves_rat": moves1, "moves_python": moves2, "miss_rat": miss1, "miss_python": miss2, "stucks_rat":stucks1, "stucks_python":stucks2, "prep_time_rat":p1_prep_delay, "prep_time_python":p2_prep_delay, "turn_time_rat":p1_turn_delay, "turn_time_python":p2_turn_delay}
     if args.save:
