@@ -152,6 +152,7 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
                 decision = turn(maze, width, height, player1_location, player2_location, score1, score2, pieces_of_cheese, turn_time)
                 after = time.time()
                 turn_delay = turn_delay + (after - before)
+                print(after - before)
                 turn_delay_count = turn_delay_count + 1
             except Exception as e:
                 traceback.print_exc()
@@ -314,6 +315,10 @@ def run_game(screen, infoObject):
     win1 = 0
     win2 = 0
     
+    still_computing1 = False
+    still_computing2 = False
+    
+    
     # Retrieve names
     debug("Reading names of players",1)
     p1name = str(q1_out.get())
@@ -437,9 +442,11 @@ def run_game(screen, infoObject):
             break
 
         # If players can move, ask them their next decision
-        if stuck1 <= 0:
+        if stuck1 <= 0 and not still_computing1 :
+            still_computing1 = True
             send_turn(q1_in, player1_location, player2_location, score1, score2, pieces_of_cheese)
-        if stuck2 <= 0:
+        if stuck2 <= 0 and not still_computing2 :
+            still_computing2 = True
             send_turn(q2_in, player2_location, player1_location, score2, score1, pieces_of_cheese)
         if args.save:
             savefile.write("# turn "+str(turns) + " rat_location then python_location then pieces_of_cheese then rat_decision then python_decision\n")
@@ -458,6 +465,7 @@ def run_game(screen, infoObject):
             else:
                 decision1 = "None"
                 stucks1 = stucks1 + 1
+            still_computing1 = False
         except:
             decision1 = "None"
         try:
@@ -466,6 +474,7 @@ def run_game(screen, infoObject):
             else:
                 decision2 = "None"
                 stucks2 = stucks2 + 1
+            still_computing2 = False
         except:
             decision2 = "None"
 
