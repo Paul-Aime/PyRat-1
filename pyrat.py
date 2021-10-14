@@ -121,6 +121,7 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
         preprocessing(maze, width, height, player1_location, player2_location, pieces_of_cheese, preparation_time)
         after = time.time()
         prep_time = after - before
+        q_out.put("preprocessing")
     except Exception as e:
         traceback.print_exc()
         print(e, file=sys.stderr,)
@@ -152,7 +153,6 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
                 decision = turn(maze, width, height, player1_location, player2_location, score1, score2, pieces_of_cheese, turn_time)
                 after = time.time()
                 turn_delay = turn_delay + (after - before)
-                print(after - before)
                 turn_delay_count = turn_delay_count + 1
             except Exception as e:
                 traceback.print_exc()
@@ -315,8 +315,10 @@ def run_game(screen, infoObject):
     win1 = 0
     win2 = 0
     
-    still_computing1 = False
-    still_computing2 = False
+    preprocessing_over1 = False
+    preprocessing_over2 = False
+    still_computing1 = True
+    still_computing2 = True
     
     
     # Retrieve names
@@ -379,6 +381,8 @@ def run_game(screen, infoObject):
     # Main loop
     debug("Starting game",1)
     while 1:
+    
+    
         # First tell players if game is finished
         q1_quit.put(False)
         q2_quit.put(False)    
@@ -388,6 +392,22 @@ def run_game(screen, infoObject):
             send_info("max number of turns reached!", q_info)
             break
         turns = turns + 1
+
+        # Check if preprocessing is over
+        if not preprocessing_over1 :
+            try :
+                decision1 = str(q1_out.get(args.synchronous))
+                preprocessing_over1 = True
+                still_computing1 = False
+            except :
+                pass
+        if not preprocessing_over2 :
+            try :
+                decision2 = str(q2_out.get(args.synchronous))
+                preprocessing_over2 = True
+                still_computing2 = False
+            except :
+                pass
 
         # If players are stuck with mud, this is one turn towards getting out of it
         stuck1 = stuck1 - 1
