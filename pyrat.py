@@ -77,7 +77,14 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
         with open(ipynb_file_name, "r") as ipynb_file :
             #notebook_name = ipynb_file.read().split(".ipynb")[0].split("name\":\"")[1]
             notebook_json = json.load(ipynb_file)
-            notebook_name = notebook_json["metadata"]["colab"]["name"]
+            try :
+                notebook_name = notebook_json["metadata"]["colab"]["name"]
+            except :
+                try :
+                    print("Warning: cannot find Colab program name, missing metadata in API")
+                    notebook_name = "Colab code"
+                except Exception as e :
+                    raise Exception("Error getting colab name, please contact support:", e)
             if notebook_name.endswith(".ipynb"):
                 notebook_name = notebook_name[:-len(".ipynb")]
         py_file_name = base_dir + notebook_name + ".py"
