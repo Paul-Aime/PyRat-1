@@ -75,7 +75,6 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
         ipynb_file_name = base_dir + file_id + ".ipynb"
         gdown.download(url, ipynb_file_name)
         with open(ipynb_file_name, "r") as ipynb_file :
-            #notebook_name = ipynb_file.read().split(".ipynb")[0].split("name\":\"")[1]
             notebook_json = json.load(ipynb_file)
             try :
                 notebook_name = notebook_json["metadata"]["colab"]["name"]
