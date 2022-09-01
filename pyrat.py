@@ -81,7 +81,7 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
             except :
                 try :
                     print("Warning: cannot find Colab program name, missing metadata in API")
-                    notebook_name = "Colab code"
+                    notebook_name = "colab"
                 except Exception as e :
                     raise Exception("Error getting colab name, please contact support:", e)
             if notebook_name.endswith(".ipynb"):
