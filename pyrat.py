@@ -35,6 +35,7 @@ import datetime
 import gdown
 import ipynb_py_convert
 import json
+import pandas as pd
 
 if args.import_keras:
     import keras
@@ -613,6 +614,14 @@ def run_game(screen, infoObject):
         savefile.close()
     return stats
 
+# Get the basename of a file path, without extension
+def basename(path):
+    return os.path.basename(path).rsplit(".", maxsplit=1)[0]
+
+# Get a string representation of current datetime
+def now():
+    return datetime.datetime.now().strftime(r"%y%m%dT%H%M%S")
+
 def main():
     # Start program
     debug("Starting pygame...")
@@ -637,23 +646,44 @@ def main():
     else:        
         screen = ""
         infoObject = ""        
+
     # Run first game
-    debug("Starting first game")
-    result = run_game(screen, infoObject)
+    results = [run_game(screen, infoObject)]
+
     # Run other games (if any)
-    for i in range(args.tests - 1):
-        debug("Starting match number " + str(i))
-        print("match " + str(i+2) + "/" + str(args.tests))
-        new = run_game(screen, infoObject)
-        debug("Aggregating stats")
-        result = {x: result.get(x, 0) + new.get(x, 0) for x in set(result).union(new)}
-    debug("Writing stats and exiting")
-    result = {k: v / args.tests for k, v in result.items()}
-    # Print stats and exit
-    print("{")
-    for key,value in sorted(result.items()):
-        print("\t\"" + str(key) + "\": " + str(value))
-    print("}")
+    for game_number in range(2, args.tests + 1):
+        debug("Starting game number " + str(game_number))
+        print("match " + str(game_number) + "/" + str(args.tests))
+        results.append(run_game(screen, infoObject))
+
+    # Print stats
+    debug("Printing stats")
+    results_df = pd.DataFrame.from_records(results)
+    if args.tests > 1:
+        print(results_df.describe().T[["mean", "std", "min", "max"]])
+    else:
+        print(results_df.T)
+
+    # Save stats
+    debug("Writing stats")
+    stats_dir = "stats"
+    if not os.path.exists(stats_dir):
+        os.mkdir(stats_dir)
+    stats_path = stats_dir + os.path.sep + now() + "_" + basename(args.rat)
+    if args.python:
+        stats_path += "_VS_" + basename(args.python)
+    stats_path += ".csv"
+    results_df.to_csv(stats_path, index=False)
+    # add command line as metadata
+    with open(stats_path, "r") as f:
+        csv_text = f.read()
+    with open(stats_path, "w") as f:
+        cmd_line = "python " + " ".join(sys.argv)
+        f.write(cmd_line + "\n\n" + csv_text)
+
+    print("\nStats can be found at: " + stats_path)
+
+    debug("Quitting")
     pygame.quit()
 
 if __name__ == "__main__":
