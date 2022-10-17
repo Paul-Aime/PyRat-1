@@ -143,7 +143,7 @@ def comparison_plot(stats, variable, lines, ax=None, **fixed):
 
     Parameters
     ----------
-    df : pd.DataFrame
+    stats : pd.DataFrame
         The dataframe obtained using `pyrat_multiruns`.
     variable : str
         The variable to study, plotted on the y-axis.
@@ -152,6 +152,9 @@ def comparison_plot(stats, variable, lines, ax=None, **fixed):
         from which to draw multiple lines for each of its values.
     ax : plt.Axes, optional
         An ax to draw on. Convenient to put the plot into a subplot.
+    **fixed :
+        name=value pairs, to fix remaining variables.
+        e.g. `mud_density=0.5, width=21`.
 
     Returns
     -------
