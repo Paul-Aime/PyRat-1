@@ -114,10 +114,6 @@ def pyrat_multiruns(*, fixed_params, grid_params, link_height_width=False):
         # Let's just take the mean across tests
         stats = stats.mean()
 
-        # # And reduce to the variables of interest
-        # if variables:
-        #     stats = stats[variables]
-
         # Register, converting Path() objects to str(Path().stem)
         pvalues = tuple(
             pvalue if pname not in {"rat", "python"} else str(pvalue.stem)
