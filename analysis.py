@@ -101,13 +101,13 @@ def pyrat_multiruns(*, fixed_params, grid_params, link_height_width=False):
     # Run experiments by iterating over configurations
     results = {}
     for params in dict_product(grid_params):
-        for pname, pvalue in params.items():
-            pyrat.kwargs[pname] = pvalue
-            if link_height_width:
-                if pname == "height":
-                    pyrat.kwargs["width"] = pvalue
-                if pname == "width":
-                    pyrat.kwargs["height"] = pvalue
+
+        if link_height_width:
+            if "width" in params:
+                params["height"] = params["width"]
+            elif "height" in params:
+                params["width"] = params["height"]
+        pyrat.kwargs.update(params)
 
         csv_path, stats = pyrat.run()
 
